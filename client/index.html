@@ -34,30 +34,23 @@
     </script>
   </head>
 
-  <body class="bg-[#0b0d19] text-slate-100 font-sans min-h-screen selection:bg-purple-600 selection:text-white overflow-x-hidden relative">
-    
-    <div class="absolute top-0 left-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-[120px] pointer-events-none"></div>
-    <div class="absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[150px] pointer-events-none"></div>
-
+  <body>
     <main
-      class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-col items-center relative z-10"
+      class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-col items-center"
     >
-      <div class="flex justify-between items-center w-full gap-4 mb-12 md:mb-16 border-b border-slate-800/60 pb-5">
-        <div class="flex items-center gap-3 group">
-          <img src="assets/bitplay_logo.png" alt="logo" class="h-11 w-auto drop-shadow-[0_0_10px_rgba(59,130,246,0.5)] transition-transform duration-300 group-hover:scale-105" />
-          <div class="flex flex-col">
-            <span class="text-2xl font-bold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">Torrent TV</span>
-            <span class="text-[10px] text-purple-400 font-medium tracking-widest uppercase">Dev Mr ThinUzz</span>
-          </div>
-        </div>
+      <div class="flex justify-between w-full gap-4 mb-8 md:mb-15">
         <div class="flex items-center gap-3">
+          <img src="assets/bitplay_logo.png" alt="logo" class="h-12 w-auto" />
+          <span class="text-[24px] font-semibold">Torrent TV</span>
+        </div>
+        <div class="flex items-center gap-4">
           <button
-            class="inline-flex items-center cursor-pointer justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium transition-all outline-none border border-slate-800 bg-slate-900/60 backdrop-blur-md text-slate-300 shadow-lg hover:bg-slate-800 hover:text-white hover:border-slate-700 size-11 active:scale-95"
+            class="inline-flex items-center cursor-pointer justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-10"
             type="button"
             id="toggle_theme"
           ></button>
           <button
-            class="inline-flex h-11 px-4 items-center cursor-pointer justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium transition-all outline-none border border-slate-800 bg-slate-900/60 backdrop-blur-md text-slate-300 shadow-lg hover:bg-slate-800 hover:text-white hover:border-slate-700 active:scale-95"
+            class="inline-flex h-10 px-3 items-center cursor-pointer justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50"
             type="button"
             id="settings-btn"
           >
@@ -71,7 +64,7 @@
               stroke-width="2"
               stroke-linecap="round"
               stroke-linejoin="round"
-              class="lucide lucide-settings2 w-4 h-4 text-purple-400 animate-[spin_8s_linear_infinite]"
+              class="lucide lucide-settings2 w-4 h-4"
             >
               <path d="M20 7h-9"></path>
               <path d="M14 17H5"></path>
@@ -82,77 +75,73 @@
           </button>
         </div>
       </div>
-      
       <h1
-        class="mb-10 text-4xl leading-[1.15] md:text-6xl max-w-2xl text-center font-extrabold tracking-tight bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500 text-transparent bg-clip-text drop-shadow-sm"
+        class="mb-8 text-3xl leading-[1.2] md:text-5xl max-w-xl text-center font-semibold bg-gradient-to-r from-primary to-[#00CCFF] text-transparent bg-clip-text"
       >
         Stream torrents with ease
       </h1>
-      
-      <div id="search-wrapper" class="hidden w-full dynamic-fade-in">
-        <form id="search-form" class="w-full flex items-center gap-3 bg-slate-900/40 border border-slate-800/80 p-2 rounded-2xl backdrop-blur-xl focus-within:border-blue-500/50 focus-within:shadow-[0_0_20px_rgba(59,130,246,0.15)] transition-all">
+      <div id="search-wrapper" class="hidden w-full">
+        <form id="search-form" class="w-full flex items-center gap-3">
           <input
-            class="placeholder:text-slate-500 selection:bg-blue-600 dark:bg-transparent flex w-full min-w-0 bg-transparent px-4 py-2 text-base transition-all outline-none md:text-sm h-12 overflow-ellipsis overflow-hidden text-slate-100"
-            placeholder="Search movies, shows, or hashes..."
+            class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-12 overflow-ellipsis overflow-hidden"
+            placeholder="Search..."
             id="search"
             name="search"
             type="search"
           />
-          <button class="h-12 px-6 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold text-sm hover:from-blue-500 hover:to-indigo-500 shadow-lg shadow-blue-600/20 active:scale-[0.98] transition-all whitespace-nowrap" type="submit">Search</button>
+          <button class="btn" type="submit">Search</button>
         </form>
-        
         <div
           id="search-result"
-          class="mt-6 border border-slate-800 rounded-2xl overflow-hidden max-h-[500px] bg-slate-900/60 backdrop-blur-xl shadow-2xl hidden"
+          class="mt-4 border rounded-lg overflow-auto max-h-[500px] bg-accent/50 hidden"
         >
           <table class="w-full caption-bottom text-sm">
             <thead>
-              <tr class="bg-slate-950/80 text-slate-400 border-b border-slate-800 font-medium">
-                <th class="p-4 text-left font-semibold">Name</th>
-                <th class="p-4 text-left font-semibold">Indexer</th>
-                <th class="p-4 text-left font-semibold">Size</th>
-                <th class="p-4 text-left font-semibold">Seeders</th>
-                <th class="p-4 text-left w-[10px]"></th>
+              <tr class="bg-muted text-muted-foreground border-b">
+                <th class="p-3 text-left">Name</th>
+                <th class="p-3 text-left">Indexer</th>
+                <th class="p-3 text-left">Size</th>
+                <th class="p-3 text-left">Seeders</th>
+                <th class="p-3 text-left w-[10px]"></th>
               </tr>
             </thead>
             <tbody
               id="search-result-body"
-              class="divide-y divide-slate-800/50 text-slate-300 bg-slate-900/20 [&_td]:px-4 [&_td]:py-3.5 [&_td]:whitespace-nowrap [&_td]:max-w-[220px] [&_td]:overflow-hidden [&_td]:text-ellipsis"
+              class="divide-y [&_td]:px-3 [&_td]:py-2 [&_td]:whitespace-nowrap [&_td]:max-w-[200px] [&_td]:overflow-hidden [&_td]:text-ellipsis"
             >
-              <tr class="hover:bg-slate-800/30 transition-colors">
-                <td colspan="5" class="py-12 px-6 text-center text-slate-500 font-medium">
+              <tr>
+                <td colspan="5" class="py-10 px-6 text-center">
                   No results found
                 </td>
               </tr>
             </tbody>
             <tfoot class="hidden">
               <tr>
-                <td colspan="5" class="py-12 px-6 text-center text-slate-500 font-medium">
+                <td colspan="5" class="py-10 px-6 text-center">
                   No results found
                 </td>
               </tr>
             </tfoot>
           </table>
         </div>
-        <div id="search-pagination" class="hidden mt-4"></div>
+        <div id="search-pagination" class="hidden"></div>
         <div
-          class="w-full my-6 text-center text-xs font-bold tracking-widest text-slate-500 relative flex items-center justify-center before:content-[''] before:h-[1px] before:bg-slate-800/80 before:flex-1 before:mr-4 after:content-[''] after:h-[1px] after:bg-slate-800/80 after:flex-1 after:ml-4"
+          class="w-full my-4 text-center text-sm font-semibold text-accent-foreground"
         >
           OR
         </div>
       </div>
-      
-      <form id="torrent-form" class="w-full flex items-center gap-3 bg-slate-900/40 border border-slate-800/80 p-2 rounded-2xl backdrop-blur-xl focus-within:border-purple-500/50 focus-within:shadow-[0_0_20px_rgba(147,51,234,0.15)] transition-all">
-        <div class="relative w-full flex items-center">
+      <form id="torrent-form" class="w-full flex items-center gap-3">
+        <div class="relative w-full">
           <input
-            class="placeholder:text-slate-500 selection:bg-purple-600 dark:bg-transparent flex w-full min-w-0 bg-transparent pl-4 pr-14 py-2 text-base transition-all outline-none md:text-sm h-12 overflow-ellipsis overflow-hidden text-slate-100"
-            placeholder="Paste your Magnet link here..."
+            class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-12 pr-12 overflow-ellipsis overflow-hidden"
+            placeholder="Magnet link"
             id="magnet"
             name="magnet"
           />
           <button
             id="copy_magnet"
-            class="inline-flex items-center cursor-pointer justify-center rounded-xl text-sm font-medium transition-all border border-transparent text-slate-400 hover:text-purple-400 hover:bg-purple-500/10 absolute right-1 size-10 active:scale-90"
+            class="inline-flex items-center cursor-pointer justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 size-10 absolute right-0 top-0 h-full w-12"
             type="button"
           >
             <svg
@@ -177,12 +166,11 @@
             </svg>
           </button>
         </div>
-        <button class="h-12 px-6 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold text-sm hover:from-purple-500 hover:to-indigo-500 shadow-lg shadow-purple-600/20 active:scale-[0.98] transition-all whitespace-nowrap" type="submit">Play Now</button>
+        <button class="btn" type="submit">Play Now</button>
       </form>
-      
       <div
         id="demo_torrent"
-        class="w-full rounded-2xl p-4 text-center flex items-center gap-2.5 justify-center text-sm font-semibold text-blue-400 border border-blue-500/30 bg-blue-500/5 cursor-pointer hover:bg-blue-500/10 hover:border-blue-500/50 shadow-md transition-all active:scale-[0.99] mt-5"
+        class="w-full rounded-lg p-3 text-center flex items-center gap-2 justify-center text-sm font-semibold text-accent-foreground border-2 mt-4 border-primary bg-secondary/50 cursor-pointer hover:bg-transparent transition-all"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -194,7 +182,7 @@
           stroke-width="2"
           stroke-linecap="round"
           stroke-linejoin="round"
-          class="lucide lucide-video w-5 h-5 inline-block text-blue-400"
+          class="lucide lucide-video w-6 h-6 inline-block"
         >
           <path
             d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"
@@ -203,32 +191,29 @@
         </svg>
         Try Demo with Sintel (CC Movie)
       </div>
-      
       <div
         id="torrent_file_wrapper"
-        class="w-full relative rounded-2xl p-6 py-12 text-center flex flex-col items-center gap-4 justify-center text-sm font-semibold text-slate-400 mt-6 border-2 border-slate-800 border-dashed bg-slate-900/20 backdrop-blur-md cursor-pointer hover:bg-slate-900/40 hover:border-purple-500/40 transition-all group"
+        class="w-full relative rounded-lg p-3 py-10 text-center flex flex-col items-center gap-4 justify-center text-sm font-semibold text-accent-foreground mt-7 border-2 border-foreground/30 border-dashed bg-secondary/50 cursor-pointer hover:bg-transparent transition-all"
       >
-        <div class="p-4 rounded-2xl bg-purple-500/5 border border-purple-500/10 group-hover:scale-110 group-hover:border-purple-500/30 transition-all shadow-inner">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-upload size-8 text-purple-400"
-          >
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-            <polyline points="17 8 12 3 7 8"></polyline>
-            <line x1="12" x2="12" y1="3" y2="15"></line>
-          </svg>
-        </div>
-        <span class="text-sm text-slate-300 font-medium"
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="lucide lucide-upload size-12 text-primary"
+        >
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="17 8 12 3 7 8"></polyline>
+          <line x1="12" x2="12" y1="3" y2="15"></line>
+        </svg>
+        <span class="text-sm text-accent-foreground font-bold"
           >Drag and drop your torrent file here, or
-          <span class="text-purple-400 font-semibold underline underline-offset-4 decoration-purple-500/40 group-hover:text-purple-300">Browse</span>
+          <span class="text-primary">Browse</span>
         </span>
         <input
           type="file"
@@ -237,20 +222,18 @@
           id="torrent_file"
         />
       </div>
-      
-      <video id="video-player" class="video-js mt-10 w-full rounded-2xl overflow-hidden shadow-2xl border border-slate-800 bg-black"></video>
+      <video id="video-player" class="video-js mt-10 w-full"></video>
     </main>
-    
-    <div id="settings-model" class="fixed inset-0 z-[999] flex flex-col hidden backdrop-blur-md transition-all duration-300">
-      <div id="close-settings" class="absolute inset-0 bg-slate-950/70 backdrop-blur-sm"></div>
+    <div id="settings-model" class="fixed inset-0 z-[999] flex flex-col hidden">
+      <!-- model overlay -->
+      <div id="close-settings" class="absolute inset-0 bg-black/70"></div>
+      <!-- model content -->
       <div
-        class="p-6 bg-slate-900/95 border border-slate-800/80 rounded-2xl shadow-2xl w-full max-w-lg m-auto relative z-[2] dynamic-scale-up"
+        class="p-6 bg-background rounded-xl shadow-lg w-full max-w-lg m-auto border z-[2]"
       >
-        <div class="flex items-center justify-between mb-6 border-b border-slate-800 pb-3">
-          <h1 class="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-             <span class="w-2 h-2 rounded-full bg-purple-500 animate-pulse"></span> Settings
-          </h1>
-          <button id="close-settings" type="button" class="text-slate-400 hover:text-white p-1 hover:bg-slate-800 rounded-lg transition-colors">
+        <div class="flex items-center justify-between mb-6">
+          <h1 class="text-xl font-semibold">Settings</h1>
+          <button id="close-settings" type="button">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -268,10 +251,9 @@
             </svg>
           </button>
         </div>
-        
-        <div class="flex gap-2 mb-6 p-1 bg-slate-950/60 border border-slate-800/60 rounded-xl">
+        <div class="flex gap-2 mb-7">
           <button
-            class="tab-btn flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg transition-all border border-transparent font-medium text-xs tracking-wider uppercase flex-1 bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md shadow-purple-600/10"
+            class="tab-btn flex items-center gap-2 px-4 py-2 rounded-lg transition-colors border bg-primary text-primary-foreground"
             data-index="0"
             type="button"
           >
@@ -294,7 +276,7 @@
             <span>Proxy</span>
           </button>
           <button
-            class="tab-btn flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg transition-all border border-transparent text-slate-400 hover:text-slate-200 font-medium text-xs tracking-wider uppercase flex-1"
+            class="tab-btn flex items-center gap-2 px-4 py-2 rounded-lg transition-colors bg-muted border"
             data-index="1"
             type="button"
           >
@@ -316,7 +298,7 @@
             <span>Prowlarr</span>
           </button>
           <button
-            class="tab-btn flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg transition-all border border-transparent text-slate-400 hover:text-slate-200 font-medium text-xs tracking-wider uppercase flex-1"
+            class="tab-btn flex items-center gap-2 px-4 py-2 rounded-lg transition-colors bg-muted border"
             data-index="2"
             type="button"
           >
@@ -340,49 +322,48 @@
             <span>Jackett</span>
           </button>
         </div>
-        
         <form
           id="proxy-settings-form"
           data-tab="0"
-          class="tab flex flex-col gap-5"
+          class="tab flex flex-col gap-6"
         >
           <label
             id="switchInput"
             for="enableProxy"
-            class="flex items-center cursor-pointer group"
+            class="flex items-center cursor-pointer"
           >
             <input id="enableProxy" type="checkbox" class="sr-only" />
             <div
-              class="w-11 switch-wrapper h-6 bg-slate-800 border border-slate-700 rounded-full relative transition-all group-hover:border-slate-600"
+              class="w-11 switch-wrapper h-6 border bg-accent rounded-full shadow-inner relative transition"
             >
               <div
-                class="dot absolute size-4.5 bg-slate-300 rounded-full left-[3px] top-[2.5px] transition-all"
+                class="dot absolute size-5 bg-white rounded-full shadow left-[1px] top-[1px] transition"
               ></div>
             </div>
-            <span class="ml-3 text-slate-300 text-sm font-medium group-hover:text-white transition-colors"> Enable Proxy </span>
+            <span class="ml-3 text-muted-foreground"> Enable Proxy </span>
           </label>
           <div class="flex flex-col gap-2">
             <label
               for="proxy"
-              class="text-slate-400 text-xs font-semibold tracking-wider uppercase"
+              class="text-muted-foreground text-sm font-semibold"
               >Enter a SOCKS5 Proxy URL
             </label>
             <input
               type="text"
               id="proxyUrl"
               placeholder="socks5://username:password@host:port"
-              class="placeholder:text-slate-600 dark:bg-slate-950/50 border-slate-800 flex w-full rounded-xl border bg-transparent px-4 py-2.5 text-base transition-all outline-none md:text-sm focus:border-purple-500/50 h-11 text-slate-100"
+              class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-10 pr-12 overflow-ellipsis overflow-hidden"
             />
           </div>
-          <div id="proxy-result" class="hidden items-center gap-2 p-3 rounded-xl bg-slate-950/40 border border-slate-800/80">
-            <span class="text-slate-400 text-sm">IP Address:</span>
-            <span class="output-ip text-blue-400 font-mono text-sm font-semibold"></span>
+          <div id="proxy-result" class="hidden items-center gap-2">
+            <span class="text-muted-foreground">IP Address:</span
+            ><span class="output-ip text-primary"></span>
           </div>
-          <div class="flex gap-3 mt-2">
+          <div class="flex gap-2">
             <button
               type="button"
               id="test-proxy"
-              class="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl transition-all bg-slate-800 border border-slate-700 font-semibold text-slate-300 text-sm hover:bg-slate-700 hover:text-white flex-1 active:scale-95"
+              class="flex items-center justify-center gap-2 px-4 py-2 flex-1 rounded-lg transition-colors bg-muted border font-medium text-sm"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -394,7 +375,7 @@
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                class="lucide lucide-test-tube2 w-4 h-4 text-purple-400"
+                class="lucide lucide-test-tube2 w-4 h-4"
               >
                 <path
                   d="M21 7 6.82 21.18a2.83 2.83 0 0 1-3.99-.01v0a2.83 2.83 0 0 1 0-4L17 3"
@@ -404,63 +385,62 @@
               </svg>
               <span>Test Proxy</span>
             </button>
-            <button type="submit" class="h-11 px-6 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold text-sm hover:from-purple-500 hover:to-indigo-500 shadow-lg shadow-purple-600/20 active:scale-[0.98] transition-all flex-1">
+            <button type="submit" class="btn flex-1 !h-11">
               Save Settings
             </button>
           </div>
         </form>
-        
         <form
           id="prowlarr-settings-form"
           data-tab="1"
-          class="tab flex flex-col gap-5 hidden"
+          class="tab flex flex-col gap-6 hidden"
         >
           <label
             id="switchInput"
             for="enableProwlarr"
-            class="flex items-center cursor-pointer group"
+            class="flex items-center cursor-pointer"
           >
             <input id="enableProwlarr" type="checkbox" class="sr-only" />
             <div
-              class="w-11 switch-wrapper h-6 bg-slate-800 border border-slate-700 rounded-full relative transition-all group-hover:border-slate-600"
+              class="w-11 switch-wrapper h-6 border bg-accent rounded-full shadow-inner relative transition"
             >
               <div
-                class="dot absolute size-4.5 bg-slate-300 rounded-full left-[3px] top-[2.5px] transition-all"
+                class="dot absolute size-5 bg-white rounded-full shadow left-[1px] top-[1px] transition"
               ></div>
             </div>
-            <span class="ml-3 text-slate-300 text-sm font-medium group-hover:text-white transition-colors"> Enable Prowlarr </span>
+            <span class="ml-3 text-muted-foreground"> Enable Prowlarr </span>
           </label>
           <div class="flex flex-col gap-2">
             <label
               for="prowlarrHost"
-              class="text-slate-400 text-xs font-semibold tracking-wider uppercase"
+              class="text-muted-foreground text-sm font-semibold"
               >Prowlarr Host</label
             >
             <input
               type="text"
               id="prowlarrHost"
               placeholder="http://localhost:9117"
-              class="placeholder:text-slate-600 dark:bg-slate-950/50 border-slate-800 flex w-full rounded-xl border bg-transparent px-4 py-2.5 text-base transition-all outline-none md:text-sm focus:border-purple-500/50 h-11 text-slate-100"
+              class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-10 pr-12 overflow-ellipsis overflow-hidden"
             />
           </div>
           <div class="flex flex-col gap-2">
             <label
               for="prowlarrApiKey"
-              class="text-slate-400 text-xs font-semibold tracking-wider uppercase"
+              class="text-muted-foreground text-sm font-semibold"
               >API Key</label
             >
             <input
               type="text"
               id="prowlarrApiKey"
               placeholder="Your Prowlarr API key"
-              class="placeholder:text-slate-600 dark:bg-slate-950/50 border-slate-800 flex w-full rounded-xl border bg-transparent px-4 py-2.5 text-base transition-all outline-none md:text-sm focus:border-purple-500/50 h-11 text-slate-100"
+              class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-10 pr-12 overflow-ellipsis overflow-hidden"
             />
           </div>
-          <div class="flex gap-3 mt-2">
+          <div class="flex gap-2">
             <button
               type="button"
               id="test-prowlarr"
-              class="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl transition-all bg-slate-800 border border-slate-700 font-semibold text-slate-300 text-sm hover:bg-slate-700 hover:text-white flex-1 active:scale-95"
+              class="flex items-center justify-center gap-2 px-4 py-2 flex-1 rounded-lg transition-colors bg-muted border font-medium text-sm"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -472,7 +452,7 @@
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                class="lucide lucide-test-tube2 w-4 h-4 text-purple-400"
+                class="lucide lucide-test-tube2 w-4 h-4"
               >
                 <path
                   d="M21 7 6.82 21.18a2.83 2.83 0 0 1-3.99-.01v0a2.83 2.83 0 0 1 0-4L17 3"
@@ -482,63 +462,62 @@
               </svg>
               <span>Test Connection</span>
             </button>
-            <button type="submit" class="h-11 px-6 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold text-sm hover:from-purple-500 hover:to-indigo-500 shadow-lg shadow-purple-600/20 active:scale-[0.98] transition-all flex-1">
+            <button type="submit" class="btn flex-1 !h-11">
               Save Settings
             </button>
           </div>
         </form>
-        
         <form
           id="jackett-settings-form"
           data-tab="2"
-          class="tab flex flex-col gap-5 hidden"
+          class="tab flex flex-col gap-6 hidden"
         >
           <label
             id="switchInput"
             for="enableJackett"
-            class="flex items-center cursor-pointer group"
+            class="flex items-center cursor-pointer"
           >
             <input id="enableJackett" type="checkbox" class="sr-only" />
             <div
-              class="w-11 switch-wrapper h-6 bg-slate-800 border border-slate-700 rounded-full relative transition-all group-hover:border-slate-600"
+              class="w-11 switch-wrapper h-6 border bg-accent rounded-full shadow-inner relative transition"
             >
               <div
-                class="dot absolute size-4.5 bg-slate-300 rounded-full left-[3px] top-[2.5px] transition-all"
+                class="dot absolute size-5 bg-white rounded-full shadow left-[1px] top-[1px] transition"
               ></div>
             </div>
-            <span class="ml-3 text-slate-300 text-sm font-medium group-hover:text-white transition-colors"> Enable Jackett </span>
+            <span class="ml-3 text-muted-foreground"> Enable Jackett </span>
           </label>
           <div class="flex flex-col gap-2">
             <label
               for="jackettHost"
-              class="text-slate-400 text-xs font-semibold tracking-wider uppercase"
+              class="text-muted-foreground text-sm font-semibold"
               >Jackett Host</label
             >
             <input
               type="text"
               id="jackettHost"
               placeholder="http://localhost:9117"
-              class="placeholder:text-slate-600 dark:bg-slate-950/50 border-slate-800 flex w-full rounded-xl border bg-transparent px-4 py-2.5 text-base transition-all outline-none md:text-sm focus:border-purple-500/50 h-11 text-slate-100"
+              class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-10 pr-12 overflow-ellipsis overflow-hidden"
             />
           </div>
           <div class="flex flex-col gap-2">
             <label
               for="jackettApiKey"
-              class="text-slate-400 text-xs font-semibold tracking-wider uppercase"
+              class="text-muted-foreground text-sm font-semibold"
               >API Key</label
             >
             <input
               type="text"
               id="jackettApiKey"
               placeholder="Your Jackett API key"
-              class="placeholder:text-slate-600 dark:bg-slate-950/50 border-slate-800 flex w-full rounded-xl border bg-transparent px-4 py-2.5 text-base transition-all outline-none md:text-sm focus:border-purple-500/50 h-11 text-slate-100"
+              class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-10 pr-12 overflow-ellipsis overflow-hidden"
             />
           </div>
-          <div class="flex gap-3 mt-2">
+          <div class="flex gap-2">
             <button
               type="button"
               id="test-jackett"
-              class="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl transition-all bg-slate-800 border border-slate-700 font-semibold text-slate-300 text-sm hover:bg-slate-700 hover:text-white flex-1 active:scale-95"
+              class="flex items-center justify-center gap-2 px-4 py-2 flex-1 rounded-lg transition-colors bg-muted border font-medium text-sm"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -550,7 +529,7 @@
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                class="lucide lucide-test-tube2 w-4 h-4 text-purple-400"
+                class="lucide lucide-test-tube2 w-4 h-4"
               >
                 <path
                   d="M21 7 6.82 21.18a2.83 2.83 0 0 1-3.99-.01v0a2.83 2.83 0 0 1 0-4L17 3"
@@ -560,21 +539,13 @@
               </svg>
               <span>Test Connection</span>
             </button>
-            <button type="submit" class="h-11 px-6 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold text-sm hover:from-purple-500 hover:to-indigo-500 shadow-lg shadow-purple-600/20 active:scale-[0.98] transition-all flex-1">
+            <button type="submit" class="btn flex-1 !h-11">
               Save Settings
             </button>
           </div>
         </form>
       </div>
     </div>
-    
-    <style>
-      .dynamic-fade-in { animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-      @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-      #enableProxy:checked + .switch-wrapper, #enableProwlarr:checked + .switch-wrapper, #enableJackett:checked + .switch-wrapper { background: linear-gradient(135deg, #8b5cf6, #6366f1); border-color: #a78bfa/50; }
-      #enableProxy:checked + .switch-wrapper .dot, #enableProwlarr:checked + .switch-wrapper .dot, #enableJackett:checked + .switch-wrapper .dot { transform: translateX(20px); background-color: #fff; box-shadow: 0 0 10px rgba(139, 92, 246, 0.6); }
-    </style>
-
     <script src="assets/video.min.js"></script>
     <script src="assets/videojs.hotkeys.min.js"></script>
     <script src="assets/butterup.min.js"></script>
