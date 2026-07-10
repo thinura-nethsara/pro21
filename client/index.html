@@ -1,554 +1,589 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Torrent TV - Stream Torrents Inside the Browser</title>
-    <meta
-      name="description"
-      content="Torrent TV is a web-based torrent streaming application that allows you to stream torrents directly in your browser."
-    />
-    <link rel="icon" href="assets/favicon.png" type="image/png" />
-    <link rel="stylesheet" href="assets/video-js.min.css" />
-    <link rel="stylesheet" href="assets/butterup.min.css" />
-    <link rel="stylesheet" href="assets/output.css" />
-    <script>
-      // set theme mode
-      if (localStorage.getItem("theme") === "dark") {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.add("light");
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Torrent TV</title>
+  <meta name="description" content="Next‑gen torrent streaming inside your browser." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌀</text></svg>" />
+  <!-- Font & Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: radial-gradient(circle at 20% 30%, #0b0d1e, #030514);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      color: #eef2ff;
+    }
+
+    .glass-card {
+      background: rgba(15, 20, 40, 0.55);
+      backdrop-filter: blur(18px) saturate(1.8);
+      -webkit-backdrop-filter: blur(18px) saturate(1.8);
+      border-radius: 3rem;
+      border: 1px solid rgba(120, 100, 255, 0.25);
+      box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(160, 120, 255, 0.1) inset;
+      width: 100%;
+      max-width: 1200px;
+      padding: 2.5rem 2.8rem;
+      transition: all 0.3s ease;
+    }
+
+    /* header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2.8rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-icon {
+      font-size: 2.4rem;
+      background: linear-gradient(145deg, #a78bfa, #6366f1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 12px #6d5bff);
+    }
+
+    .brand h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      background: linear-gradient(135deg, #c4b5fd, #818cf8, #38bdf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .brand small {
+      font-size: 0.85rem;
+      font-weight: 400;
+      color: #a5b4fc;
+      background: rgba(99, 102, 241, 0.2);
+      padding: 0.2rem 1rem;
+      border-radius: 40px;
+      border: 1px solid #4f46e5;
+      margin-left: 0.5rem;
+      -webkit-text-fill-color: #c7d2fe;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .icon-btn {
+      background: rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(150, 130, 255, 0.2);
+      border-radius: 60px;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #c7d2fe;
+      font-size: 1.3rem;
+      transition: 0.25s;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .icon-btn:hover {
+      background: rgba(130, 100, 255, 0.25);
+      border-color: #818cf8;
+      color: white;
+      transform: scale(1.05);
+    }
+
+    .btn-primary {
+      background: linear-gradient(145deg, #7c6aff, #4f46e5);
+      border: none;
+      padding: 0.7rem 1.6rem;
+      border-radius: 60px;
+      font-weight: 600;
+      color: white;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      box-shadow: 0 8px 20px -6px #4338ca;
+      transition: 0.2s;
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-primary i {
+      font-size: 1rem;
+    }
+
+    .btn-primary:hover {
+      transform: scale(1.02);
+      background: linear-gradient(145deg, #8b7aff, #6366f1);
+      box-shadow: 0 12px 28px -8px #4f46e5;
+    }
+
+    /* main title */
+    .hero-title {
+      text-align: center;
+      font-size: 2.8rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #a5b4fc, #818cf8, #38bdf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 2.5rem;
+      text-shadow: 0 0 40px rgba(99, 102, 241, 0.2);
+      line-height: 1.2;
+    }
+
+    .search-area {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .input-wrapper {
+      flex: 1;
+      position: relative;
+      min-width: 220px;
+    }
+
+    .input-wrapper i {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #818cf8;
+      font-size: 1.1rem;
+      opacity: 0.7;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 1rem 1rem 1rem 3.2rem;
+      border-radius: 60px;
+      border: 1px solid rgba(130, 120, 255, 0.25);
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(8px);
+      color: #f0f3ff;
+      font-size: 1rem;
+      outline: none;
+      transition: 0.25s;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+      font-weight: 400;
+    }
+
+    .input-field::placeholder {
+      color: #8b9cf7;
+      opacity: 0.6;
+    }
+
+    .input-field:focus {
+      border-color: #818cf8;
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2), 0 8px 20px rgba(0, 0, 0, 0.4);
+      background: rgba(10, 12, 30, 0.6);
+    }
+
+    .btn-search {
+      background: linear-gradient(145deg, #6366f1, #4f46e5);
+      border: none;
+      padding: 0 2.2rem;
+      border-radius: 60px;
+      color: white;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 1rem;
+      box-shadow: 0 6px 18px -4px #3730a3;
+      transition: 0.2s;
+      cursor: pointer;
+      border: 1px solid #818cf8;
+    }
+
+    .btn-search:hover {
+      transform: scale(1.02);
+      background: linear-gradient(145deg, #818cf8, #6366f1);
+      box-shadow: 0 10px 28px -4px #4f46e5;
+    }
+
+    .or-divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      justify-content: center;
+      color: #8b9cf7;
+      font-weight: 400;
+      font-size: 0.9rem;
+      padding: 0.2rem 0;
+    }
+
+    .or-divider span {
+      background: rgba(99, 102, 241, 0.15);
+      padding: 0.2rem 1.4rem;
+      border-radius: 60px;
+      backdrop-filter: blur(4px);
+      border: 1px solid #4f46e5;
+    }
+
+    .demo-chip {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.8rem;
+      padding: 0.8rem 1.8rem;
+      border-radius: 60px;
+      background: rgba(99, 102, 241, 0.08);
+      border: 1px dashed #818cf8;
+      color: #a5b4fc;
+      font-weight: 500;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: 0.25s;
+      backdrop-filter: blur(4px);
+      margin: 1.2rem 0;
+    }
+
+    .demo-chip i {
+      color: #818cf8;
+      font-size: 1.2rem;
+    }
+
+    .demo-chip:hover {
+      background: rgba(99, 102, 241, 0.2);
+      border-color: #818cf8;
+      color: white;
+      box-shadow: 0 0 30px -8px #4f46e5;
+    }
+
+    .drop-zone {
+      border: 2px dashed rgba(130, 120, 255, 0.4);
+      border-radius: 2.8rem;
+      padding: 2.8rem 1.5rem;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(6px);
+      margin-top: 1.8rem;
+      transition: 0.3s;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .drop-zone:hover {
+      border-color: #818cf8;
+      background: rgba(99, 102, 241, 0.05);
+    }
+
+    .drop-zone i {
+      font-size: 3.2rem;
+      background: linear-gradient(145deg, #a78bfa, #4f46e5);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+
+    .drop-zone p {
+      color: #b9c6ff;
+      font-weight: 400;
+    }
+
+    .drop-zone p strong {
+      color: #818cf8;
+      font-weight: 600;
+    }
+
+    .drop-zone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .footer-note {
+      margin-top: 1.5rem;
+      text-align: right;
+      font-size: 0.8rem;
+      color: #6d7ae0;
+      letter-spacing: 0.3px;
+      border-top: 1px solid rgba(99, 102, 241, 0.1);
+      padding-top: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .footer-note span {
+      background: rgba(99, 102, 241, 0.1);
+      padding: 0.2rem 1.2rem;
+      border-radius: 40px;
+    }
+
+    /* responsive */
+    @media (max-width: 700px) {
+      .glass-card { padding: 1.8rem; }
+      .hero-title { font-size: 2rem; }
+      .brand h1 { font-size: 1.4rem; }
+      .brand small { display: none; }
+      .btn-primary { padding: 0.5rem 1.2rem; font-size: 0.8rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="glass-card">
+
+    <!-- header -->
+    <div class="header">
+      <div class="brand">
+        <span class="brand-icon"><i class="fas fa-bolt"></i></span>
+        <h1>Torrent TV <small>Dev Mr ThinUzz</small></h1>
+      </div>
+      <div class="action-buttons">
+        <button class="icon-btn" id="themeToggle" title="Toggle theme (blue/purple mood)"><i class="fas fa-moon"></i></button>
+        <button class="btn-primary" id="settingsBtn"><i class="fas fa-sliders-h"></i> Settings</button>
+      </div>
+    </div>
+
+    <!-- hero -->
+    <div class="hero-title">
+      Stream torrents · futuristic
+    </div>
+
+    <!-- search + magnet -->
+    <div class="search-area">
+      <div class="input-group">
+        <div class="input-wrapper">
+          <i class="fas fa-search"></i>
+          <input type="text" class="input-field" id="searchInput" placeholder="Search movies, shows..." />
+        </div>
+        <button class="btn-search" id="searchBtn"><i class="fas fa-arrow-right"></i> Search</button>
+      </div>
+      <div class="or-divider"><span>OR</span></div>
+      <div class="input-group">
+        <div class="input-wrapper">
+          <i class="fas fa-magnet"></i>
+          <input type="text" class="input-field" id="magnetInput" placeholder="Paste magnet link..." />
+        </div>
+        <button class="btn-search" id="playBtn" style="background: linear-gradient(145deg,#a78bfa,#7c3aed);"><i class="fas fa-play"></i> Play Now</button>
+      </div>
+    </div>
+
+    <!-- demo -->
+    <div class="demo-chip" id="demoChip">
+      <i class="fas fa-film"></i> Try Demo · Sintel (CC Movie) <i class="fas fa-chevron-right" style="font-size:0.8rem; opacity:0.6;"></i>
+    </div>
+
+    <!-- drop zone -->
+    <div class="drop-zone" id="dropZone">
+      <i class="fas fa-cloud-upload-alt"></i>
+      <p>Drag & drop your <strong>.torrent</strong> file here, or <strong>Browse</strong></p>
+      <input type="file" id="torrentFileInput" accept=".torrent" />
+    </div>
+
+    <!-- footer -->
+    <div class="footer-note">
+      <span><i class="fas fa-circle" style="color:#818cf8; font-size:0.5rem;"></i> 2026 · Torrent TV</span>
+      <span>⚡ advanced · blue/purple</span>
+    </div>
+  </div>
+
+  <!-- minimal settings modal (stub) -->
+  <div id="settingsModal" style="display: none; position: fixed; inset:0; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); align-items:center; justify-content:center; z-index:999;">
+    <div style="background: #11142a; border-radius: 2.5rem; padding: 2.5rem; max-width: 420px; width:90%; border:1px solid #4f46e5; box-shadow: 0 30px 60px black;">
+      <h3 style="font-size:1.6rem; display:flex; gap:0.6rem; align-items:center; color:#c4b5fd;"><i class="fas fa-cog"></i> Settings</h3>
+      <p style="color:#a5b4fc; margin:1.2rem 0 0.8rem;">Proxy · Prowlarr · Jackett (stub)</p>
+      <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin:1.2rem 0;">
+        <button class="btn-primary" style="padding:0.4rem 1.2rem; background:#4f46e5;">Proxy</button>
+        <button class="btn-primary" style="padding:0.4rem 1.2rem; background:#3730a3;">Prowlarr</button>
+        <button class="btn-primary" style="padding:0.4rem 1.2rem; background:#3730a3;">Jackett</button>
+      </div>
+      <button id="closeSettingsBtn" style="background:rgba(255,255,255,0.05); border:1px solid #4f46e5; padding:0.6rem 2rem; border-radius:60px; color:white; cursor:pointer;">Close</button>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // ----- open player in new tab (simulate) -----
+      function openPlayerTab(magnetOrFile) {
+        // In a real app we'd pass data. Here we just open a new tab with a player UI.
+        const newTab = window.open('', '_blank');
+        if (!newTab) {
+          alert('Please allow popups to open the player.');
+          return;
+        }
+        // Build a minimal player page (blue/purple themed)
+        newTab.document.write(`
+          <!DOCTYPE html>
+          <html>
+          <head><meta charset="UTF-8"><title>🌀 Torrent TV Player</title>
+          <style>
+            body { margin:0; background: radial-gradient(circle at 30% 20%, #0b0d1e, #02010e); display:flex; align-items:center; justify-content:center; height:100vh; font-family: system-ui; color:white; flex-direction:column; gap:2rem; }
+            .player-box { background: rgba(20, 15, 50, 0.6); backdrop-filter: blur(18px); border-radius: 3rem; padding: 3rem 2.5rem; border: 1px solid #818cf8; max-width: 700px; width:90%; text-align:center; box-shadow: 0 0 80px #4f46e5; }
+            h2 { background: linear-gradient(135deg,#a78bfa,#38bdf8); -webkit-background-clip:text; -webkit-text-fill-color:transparent; font-size:2rem; }
+            .video-placeholder { background: #1a1d3a; border-radius: 2rem; padding: 4rem 1rem; border:1px dashed #818cf8; margin:1.5rem 0; color:#8b9cf7; }
+            .badge { background: #4f46e5; padding:0.3rem 1.8rem; border-radius:60px; font-size:0.9rem; }
+            .btn-back { background: #4f46e5; border:none; padding:0.6rem 2.5rem; border-radius:60px; color:white; font-weight:600; cursor:pointer; }
+          </style>
+          </head>
+          <body>
+            <div class="player-box">
+              <h2><i class="fas fa-play-circle" style="color:#818cf8; margin-right:10px;"></i>Torrent TV · Player</h2>
+              <div class="video-placeholder">
+                <i class="fas fa-film" style="font-size:3rem; color:#818cf8; display:block; margin-bottom:0.5rem;"></i>
+                <strong style="color:#c4b5fd;">Streaming torrent</strong><br>
+                <span style="font-size:0.8rem;">${magnetOrFile ? magnetOrFile.slice(0, 50)+'…' : 'Sintel (demo)'}</span>
+              </div>
+              <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+                <span class="badge"><i class="fas fa-circle" style="color:#34d399; font-size:0.6rem;"></i> live</span>
+                <span class="badge">⚡ 2026</span>
+              </div>
+              <br>
+              <button class="btn-back" onclick="window.close()"><i class="fas fa-times"></i> Close player</button>
+              <p style="margin-top:1rem; font-size:0.7rem; color:#6d7ae0;">Dev Mr ThinUzz · advanced frontend</p>
+            </div>
+          </body>
+          </html>
+        `);
+        newTab.document.close();
       }
-      // Read 'torrent' query parameter and set default value for magnet input
-      document.addEventListener("DOMContentLoaded", function () {
-        const urlParams = new URLSearchParams(window.location.search);
-        const torrent = urlParams.get("torrent");
-        if (torrent) {
-          const decodedTorrent = decodeURIComponent(torrent);
-          const magnetInput = document.getElementById("magnet");
-          if (magnetInput) {
-            magnetInput.value = decodedTorrent;
+
+      // ----- DOM refs -----
+      const magnetInput = document.getElementById('magnetInput');
+      const playBtn = document.getElementById('playBtn');
+      const searchInput = document.getElementById('searchInput');
+      const searchBtn = document.getElementById('searchBtn');
+      const demoChip = document.getElementById('demoChip');
+      const fileInput = document.getElementById('torrentFileInput');
+      const dropZone = document.getElementById('dropZone');
+      const settingsBtn = document.getElementById('settingsBtn');
+      const settingsModal = document.getElementById('settingsModal');
+      const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+      const themeToggle = document.getElementById('themeToggle');
+
+      // ----- play actions (open new tab) -----
+      function handlePlay(magnet) {
+        const val = magnet || magnetInput.value.trim();
+        if (!val) {
+          alert('Please paste a magnet link or use demo.');
+          return;
+        }
+        if (!val.startsWith('magnet:')) {
+          alert('Please provide a valid magnet link (starts with magnet:).');
+          return;
+        }
+        openPlayerTab(val);
+      }
+
+      playBtn.addEventListener('click', () => handlePlay());
+      magnetInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') handlePlay(); });
+
+      // demo
+      demoChip.addEventListener('click', () => {
+        openPlayerTab('magnet:?xt=urn:btih:demo_sintel_2026&dn=Sintel');
+      });
+
+      // search (stub – just opens new tab with search query)
+      searchBtn.addEventListener('click', () => {
+        const q = searchInput.value.trim();
+        if (!q) return alert('Enter a search term.');
+        openPlayerTab('🔍 search: ' + q);
+      });
+      searchInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') searchBtn.click(); });
+
+      // file upload (torrent file)
+      fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          openPlayerTab('📁 ' + file.name);
+        }
+        fileInput.value = ''; // reset
+      });
+
+      dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.style.borderColor = '#a78bfa';
+        dropZone.style.background = 'rgba(99,102,241,0.08)';
+      });
+      dropZone.addEventListener('dragleave', () => {
+        dropZone.style.borderColor = 'rgba(130,120,255,0.4)';
+        dropZone.style.background = 'rgba(0,0,0,0.2)';
+      });
+      dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.style.borderColor = 'rgba(130,120,255,0.4)';
+        dropZone.style.background = 'rgba(0,0,0,0.2)';
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+          const file = files[0];
+          if (file.name.endsWith('.torrent')) {
+            openPlayerTab('📁 ' + file.name);
+          } else {
+            alert('Please drop a .torrent file');
           }
         }
       });
-    </script>
-  </head>
 
-  <body>
-    <main
-      class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-col items-center"
-    >
-      <div class="flex justify-between w-full gap-4 mb-8 md:mb-15">
-        <div class="flex items-center gap-3">
-          <img src="assets/bitplay_logo.png" alt="logo" class="h-12 w-auto" />
-          <span class="text-[24px] font-semibold">Torrent TV</span>
-        </div>
-        <div class="flex items-center gap-4">
-          <button
-            class="inline-flex items-center cursor-pointer justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-10"
-            type="button"
-            id="toggle_theme"
-          ></button>
-          <button
-            class="inline-flex h-10 px-3 items-center cursor-pointer justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50"
-            type="button"
-            id="settings-btn"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-settings2 w-4 h-4"
-            >
-              <path d="M20 7h-9"></path>
-              <path d="M14 17H5"></path>
-              <circle cx="17" cy="17" r="3"></circle>
-              <circle cx="7" cy="7" r="3"></circle>
-            </svg>
-            Settings
-          </button>
-        </div>
-      </div>
-      <h1
-        class="mb-8 text-3xl leading-[1.2] md:text-5xl max-w-xl text-center font-semibold bg-gradient-to-r from-primary to-[#00CCFF] text-transparent bg-clip-text"
-      >
-        Stream torrents with ease
-      </h1>
-      <div id="search-wrapper" class="hidden w-full">
-        <form id="search-form" class="w-full flex items-center gap-3">
-          <input
-            class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-12 overflow-ellipsis overflow-hidden"
-            placeholder="Search..."
-            id="search"
-            name="search"
-            type="search"
-          />
-          <button class="btn" type="submit">Search</button>
-        </form>
-        <div
-          id="search-result"
-          class="mt-4 border rounded-lg overflow-auto max-h-[500px] bg-accent/50 hidden"
-        >
-          <table class="w-full caption-bottom text-sm">
-            <thead>
-              <tr class="bg-muted text-muted-foreground border-b">
-                <th class="p-3 text-left">Name</th>
-                <th class="p-3 text-left">Indexer</th>
-                <th class="p-3 text-left">Size</th>
-                <th class="p-3 text-left">Seeders</th>
-                <th class="p-3 text-left w-[10px]"></th>
-              </tr>
-            </thead>
-            <tbody
-              id="search-result-body"
-              class="divide-y [&_td]:px-3 [&_td]:py-2 [&_td]:whitespace-nowrap [&_td]:max-w-[200px] [&_td]:overflow-hidden [&_td]:text-ellipsis"
-            >
-              <tr>
-                <td colspan="5" class="py-10 px-6 text-center">
-                  No results found
-                </td>
-              </tr>
-            </tbody>
-            <tfoot class="hidden">
-              <tr>
-                <td colspan="5" class="py-10 px-6 text-center">
-                  No results found
-                </td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-        <div id="search-pagination" class="hidden"></div>
-        <div
-          class="w-full my-4 text-center text-sm font-semibold text-accent-foreground"
-        >
-          OR
-        </div>
-      </div>
-      <form id="torrent-form" class="w-full flex items-center gap-3">
-        <div class="relative w-full">
-          <input
-            class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-12 pr-12 overflow-ellipsis overflow-hidden"
-            placeholder="Magnet link"
-            id="magnet"
-            name="magnet"
-          />
-          <button
-            id="copy_magnet"
-            class="inline-flex items-center cursor-pointer justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 size-10 absolute right-0 top-0 h-full w-12"
-            type="button"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-clipboard-paste size-5"
-            >
-              <path
-                d="M15 2H9a1 1 0 0 0-1 1v2c0 .6.4 1 1 1h6c.6 0 1-.4 1-1V3c0-.6-.4-1-1-1Z"
-              ></path>
-              <path
-                d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2M16 4h2a2 2 0 0 1 2 2v2M11 14h10"
-              ></path>
-              <path d="m17 10 4 4-4 4"></path>
-            </svg>
-          </button>
-        </div>
-        <button class="btn" type="submit">Play Now</button>
-      </form>
-      <div
-        id="demo_torrent"
-        class="w-full rounded-lg p-3 text-center flex items-center gap-2 justify-center text-sm font-semibold text-accent-foreground border-2 mt-4 border-primary bg-secondary/50 cursor-pointer hover:bg-transparent transition-all"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="lucide lucide-video w-6 h-6 inline-block"
-        >
-          <path
-            d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"
-          ></path>
-          <rect x="2" y="6" width="14" height="12" rx="2"></rect>
-        </svg>
-        Try Demo with Sintel (CC Movie)
-      </div>
-      <div
-        id="torrent_file_wrapper"
-        class="w-full relative rounded-lg p-3 py-10 text-center flex flex-col items-center gap-4 justify-center text-sm font-semibold text-accent-foreground mt-7 border-2 border-foreground/30 border-dashed bg-secondary/50 cursor-pointer hover:bg-transparent transition-all"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="lucide lucide-upload size-12 text-primary"
-        >
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-          <polyline points="17 8 12 3 7 8"></polyline>
-          <line x1="12" x2="12" y1="3" y2="15"></line>
-        </svg>
-        <span class="text-sm text-accent-foreground font-bold"
-          >Drag and drop your torrent file here, or
-          <span class="text-primary">Browse</span>
-        </span>
-        <input
-          type="file"
-          class="opacity-0 size-full z-[1] absolute cursor-pointer"
-          accept=".torrent"
-          id="torrent_file"
-        />
-      </div>
-      <video id="video-player" class="video-js mt-10 w-full"></video>
-    </main>
-    <div id="settings-model" class="fixed inset-0 z-[999] flex flex-col hidden">
-      <!-- model overlay -->
-      <div id="close-settings" class="absolute inset-0 bg-black/70"></div>
-      <!-- model content -->
-      <div
-        class="p-6 bg-background rounded-xl shadow-lg w-full max-w-lg m-auto border z-[2]"
-      >
-        <div class="flex items-center justify-between mb-6">
-          <h1 class="text-xl font-semibold">Settings</h1>
-          <button id="close-settings" type="button">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-x w-5 h-5"
-            >
-              <path d="M18 6 6 18"></path>
-              <path d="m6 6 12 12"></path>
-            </svg>
-          </button>
-        </div>
-        <div class="flex gap-2 mb-7">
-          <button
-            class="tab-btn flex items-center gap-2 px-4 py-2 rounded-lg transition-colors border bg-primary text-primary-foreground"
-            data-index="0"
-            type="button"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-globe w-4 h-4"
-            >
-              <circle cx="12" cy="12" r="10"></circle>
-              <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
-              <path d="M2 12h20"></path>
-            </svg>
-            <span>Proxy</span>
-          </button>
-          <button
-            class="tab-btn flex items-center gap-2 px-4 py-2 rounded-lg transition-colors bg-muted border"
-            data-index="1"
-            type="button"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-search w-4 h-4"
-            >
-              <circle cx="11" cy="11" r="8"></circle>
-              <path d="m21 21-4.3-4.3"></path>
-            </svg>
-            <span>Prowlarr</span>
-          </button>
-          <button
-            class="tab-btn flex items-center gap-2 px-4 py-2 rounded-lg transition-colors bg-muted border"
-            data-index="2"
-            type="button"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-server w-4 h-4"
-            >
-              <rect width="20" height="8" x="2" y="2" rx="2" ry="2"></rect>
-              <rect width="20" height="8" x="2" y="14" rx="2" ry="2"></rect>
-              <line x1="6" x2="6.01" y1="6" y2="6"></line>
-              <line x1="6" x2="6.01" y1="18" y2="18"></line>
-            </svg>
-            <span>Jackett</span>
-          </button>
-        </div>
-        <form
-          id="proxy-settings-form"
-          data-tab="0"
-          class="tab flex flex-col gap-6"
-        >
-          <label
-            id="switchInput"
-            for="enableProxy"
-            class="flex items-center cursor-pointer"
-          >
-            <input id="enableProxy" type="checkbox" class="sr-only" />
-            <div
-              class="w-11 switch-wrapper h-6 border bg-accent rounded-full shadow-inner relative transition"
-            >
-              <div
-                class="dot absolute size-5 bg-white rounded-full shadow left-[1px] top-[1px] transition"
-              ></div>
-            </div>
-            <span class="ml-3 text-muted-foreground"> Enable Proxy </span>
-          </label>
-          <div class="flex flex-col gap-2">
-            <label
-              for="proxy"
-              class="text-muted-foreground text-sm font-semibold"
-              >Enter a SOCKS5 Proxy URL
-            </label>
-            <input
-              type="text"
-              id="proxyUrl"
-              placeholder="socks5://username:password@host:port"
-              class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-10 pr-12 overflow-ellipsis overflow-hidden"
-            />
-          </div>
-          <div id="proxy-result" class="hidden items-center gap-2">
-            <span class="text-muted-foreground">IP Address:</span
-            ><span class="output-ip text-primary"></span>
-          </div>
-          <div class="flex gap-2">
-            <button
-              type="button"
-              id="test-proxy"
-              class="flex items-center justify-center gap-2 px-4 py-2 flex-1 rounded-lg transition-colors bg-muted border font-medium text-sm"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="lucide lucide-test-tube2 w-4 h-4"
-              >
-                <path
-                  d="M21 7 6.82 21.18a2.83 2.83 0 0 1-3.99-.01v0a2.83 2.83 0 0 1 0-4L17 3"
-                ></path>
-                <path d="m16 2 6 6"></path>
-                <path d="M12 16H4"></path>
-              </svg>
-              <span>Test Proxy</span>
-            </button>
-            <button type="submit" class="btn flex-1 !h-11">
-              Save Settings
-            </button>
-          </div>
-        </form>
-        <form
-          id="prowlarr-settings-form"
-          data-tab="1"
-          class="tab flex flex-col gap-6 hidden"
-        >
-          <label
-            id="switchInput"
-            for="enableProwlarr"
-            class="flex items-center cursor-pointer"
-          >
-            <input id="enableProwlarr" type="checkbox" class="sr-only" />
-            <div
-              class="w-11 switch-wrapper h-6 border bg-accent rounded-full shadow-inner relative transition"
-            >
-              <div
-                class="dot absolute size-5 bg-white rounded-full shadow left-[1px] top-[1px] transition"
-              ></div>
-            </div>
-            <span class="ml-3 text-muted-foreground"> Enable Prowlarr </span>
-          </label>
-          <div class="flex flex-col gap-2">
-            <label
-              for="prowlarrHost"
-              class="text-muted-foreground text-sm font-semibold"
-              >Prowlarr Host</label
-            >
-            <input
-              type="text"
-              id="prowlarrHost"
-              placeholder="http://localhost:9117"
-              class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-10 pr-12 overflow-ellipsis overflow-hidden"
-            />
-          </div>
-          <div class="flex flex-col gap-2">
-            <label
-              for="prowlarrApiKey"
-              class="text-muted-foreground text-sm font-semibold"
-              >API Key</label
-            >
-            <input
-              type="text"
-              id="prowlarrApiKey"
-              placeholder="Your Prowlarr API key"
-              class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-10 pr-12 overflow-ellipsis overflow-hidden"
-            />
-          </div>
-          <div class="flex gap-2">
-            <button
-              type="button"
-              id="test-prowlarr"
-              class="flex items-center justify-center gap-2 px-4 py-2 flex-1 rounded-lg transition-colors bg-muted border font-medium text-sm"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="lucide lucide-test-tube2 w-4 h-4"
-              >
-                <path
-                  d="M21 7 6.82 21.18a2.83 2.83 0 0 1-3.99-.01v0a2.83 2.83 0 0 1 0-4L17 3"
-                ></path>
-                <path d="m16 2 6 6"></path>
-                <path d="M12 16H4"></path>
-              </svg>
-              <span>Test Connection</span>
-            </button>
-            <button type="submit" class="btn flex-1 !h-11">
-              Save Settings
-            </button>
-          </div>
-        </form>
-        <form
-          id="jackett-settings-form"
-          data-tab="2"
-          class="tab flex flex-col gap-6 hidden"
-        >
-          <label
-            id="switchInput"
-            for="enableJackett"
-            class="flex items-center cursor-pointer"
-          >
-            <input id="enableJackett" type="checkbox" class="sr-only" />
-            <div
-              class="w-11 switch-wrapper h-6 border bg-accent rounded-full shadow-inner relative transition"
-            >
-              <div
-                class="dot absolute size-5 bg-white rounded-full shadow left-[1px] top-[1px] transition"
-              ></div>
-            </div>
-            <span class="ml-3 text-muted-foreground"> Enable Jackett </span>
-          </label>
-          <div class="flex flex-col gap-2">
-            <label
-              for="jackettHost"
-              class="text-muted-foreground text-sm font-semibold"
-              >Jackett Host</label
-            >
-            <input
-              type="text"
-              id="jackettHost"
-              placeholder="http://localhost:9117"
-              class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-10 pr-12 overflow-ellipsis overflow-hidden"
-            />
-          </div>
-          <div class="flex flex-col gap-2">
-            <label
-              for="jackettApiKey"
-              class="text-muted-foreground text-sm font-semibold"
-              >API Key</label
-            >
-            <input
-              type="text"
-              id="jackettApiKey"
-              placeholder="Your Jackett API key"
-              class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-10 pr-12 overflow-ellipsis overflow-hidden"
-            />
-          </div>
-          <div class="flex gap-2">
-            <button
-              type="button"
-              id="test-jackett"
-              class="flex items-center justify-center gap-2 px-4 py-2 flex-1 rounded-lg transition-colors bg-muted border font-medium text-sm"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="lucide lucide-test-tube2 w-4 h-4"
-              >
-                <path
-                  d="M21 7 6.82 21.18a2.83 2.83 0 0 1-3.99-.01v0a2.83 2.83 0 0 1 0-4L17 3"
-                ></path>
-                <path d="m16 2 6 6"></path>
-                <path d="M12 16H4"></path>
-              </svg>
-              <span>Test Connection</span>
-            </button>
-            <button type="submit" class="btn flex-1 !h-11">
-              Save Settings
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-    <script src="assets/video.min.js"></script>
-    <script src="assets/videojs.hotkeys.min.js"></script>
-    <script src="assets/butterup.min.js"></script>
-    <script type="module" src="assets/index.js"></script>
-  </body>
+      // settings modal
+      settingsBtn.addEventListener('click', () => {
+        settingsModal.style.display = 'flex';
+      });
+      closeSettingsBtn.addEventListener('click', () => {
+        settingsModal.style.display = 'none';
+      });
+      settingsModal.addEventListener('click', (e) => {
+        if (e.target === settingsModal) settingsModal.style.display = 'none';
+      });
+
+      // theme toggle (mood)
+      let dark = true;
+      themeToggle.addEventListener('click', () => {
+        dark = !dark;
+        const card = document.querySelector('.glass-card');
+        if (dark) {
+          card.style.background = 'rgba(15, 20, 40, 0.55)';
+          card.style.borderColor = 'rgba(120, 100, 255, 0.25)';
+          document.body.style.background = 'radial-gradient(circle at 20% 30%, #0b0d1e, #030514)';
+          themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+        } else {
+          card.style.background = 'rgba(25, 20, 60, 0.7)';
+          card.style.borderColor = '#7c6aff';
+          document.body.style.background = 'radial-gradient(circle at 70% 20%, #1a1040, #0a0518)';
+          themeToggle.innerHTML = '<i class="fas fa-sun" style="color:#fcd34d;"></i>';
+        }
+      });
+
+      // auto-focus
+      magnetInput.focus();
+
+      console.log('🌀 Torrent TV 2026 · Dev Mr ThinUzz');
+    })();
+  </script>
+
+</body>
 </html>
