@@ -12,11 +12,13 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"os/signal"
 	"reflect"
 	"runtime"
 	"strconv"
 	"strings"
 	"sync"
+	"syscall"
 	"time"
 
 	"net/url"
@@ -127,7 +129,7 @@ func createSelectiveProxyClient() *http.Client {
 	if !currentSettings.EnableProxy {
 		return &http.Client{Timeout: 30 * time.Second}
 	}
-	// Reconfigure proxyTransport’s DialContext if URL changed:
+	// Reconfigure proxyTransport's DialContext if URL changed:
 	dialer, _ := createProxyDialer(currentSettings.ProxyURL)
 	proxyTransport.DialContext = func(ctx context.Context, network, addr string) (net.Conn, error) {
 		return dialer.Dial(network, addr)
@@ -353,13 +355,17 @@ func main() {
 
 	go cleanupSessions()
 
+	// Get port from environment variable (for Railway) or use default
 	port := 3347
+	if railwayPort := os.Getenv("PORT"); railwayPort != "" {
+		if p, err := strconv.Atoi(railwayPort); err == nil {
+			port = p
+			log.Printf("Using PORT from environment: %d", port)
+		}
+	}
 
 	addr := fmt.Sprintf(":%d", port)
 	log.Printf("Attempting to start server on %s", addr)
-
-	// Create channel to signal if server started successfully
-	serverStarted := make(chan bool, 1)
 
 	// Create a server with graceful shutdown
 	server := &http.Server{
@@ -369,33 +375,41 @@ func main() {
 
 	// Start the server in a goroutine
 	go func() {
+		log.Printf("🚀 Server starting on %s", addr)
 		err := server.ListenAndServe()
 		if err != nil && err != http.ErrServerClosed {
 			log.Printf("Server failed on %s: %v", addr, err)
-			serverStarted <- false
 		}
 	}()
 
-	// Give the server a moment to start or fail
-	select {
-	case success := <-serverStarted:
-		if !success {
-			log.Printf("Server failed to start on %s", addr)
-			return
-		}
-	case <-time.After(1 * time.Second):
-		// No immediate error, assume it started successfully
-		log.Printf("🚀 Server successfully started on %s", addr)
+	// Give the server a moment to start
+	time.Sleep(1 * time.Second)
+	log.Printf("✅ Server successfully started on %s", addr)
 
-		// Create a simple message to display in the browser
-		fmt.Printf("\n------------------------------------------------\n")
-		fmt.Printf("✅ Server started! Open in your browser:\n")
-		fmt.Printf("   http://localhost:%d\n", port)
-		fmt.Printf("------------------------------------------------\n\n")
+	// Print startup message
+	fmt.Printf("\n------------------------------------------------\n")
+	fmt.Printf("✅ Server started! Open in your browser:\n")
+	fmt.Printf("   http://localhost:%d\n", port)
+	fmt.Printf("------------------------------------------------\n\n")
 
-		// Block forever (the server is running in a goroutine)
-		select {}
+	// Wait for interrupt signal to gracefully shut down the server
+	stop := make(chan os.Signal, 1)
+	signal.Notify(stop, os.Interrupt, syscall.SIGTERM)
+
+	// Block until we receive a signal
+	<-stop
+	log.Println("Shutting down server...")
+
+	// Create a deadline for graceful shutdown
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	// Gracefully shutdown the server
+	if err := server.Shutdown(ctx); err != nil {
+		log.Printf("Server shutdown error: %v", err)
 	}
+
+	log.Println("Server stopped gracefully")
 }
 
 // Set up global proxy for all Go HTTP calls
